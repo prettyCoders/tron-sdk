@@ -46,4 +46,25 @@ public class TrxHelper {
                 )
         );
     }
+
+    public static String unFreezeBalance(String senderPrivateKey,Common.ResourceCode resourceCode) throws Exception {
+        return Transaction.sendTransaction(
+                senderPrivateKey,
+                new TrxUnFreezeBalanceBuilder(
+                        resourceCode,
+                        AddressHelper.privateKeyToBase58Address(senderPrivateKey)
+                )
+        );
+    }
+
+    public static String unFreezeBalance(String senderPrivateKey,Common.ResourceCode resourceCode,String receiverAddress) throws Exception {
+        return Transaction.sendTransaction(
+                senderPrivateKey,
+                new TrxUnFreezeBalanceBuilder(
+                        receiverAddress,
+                        resourceCode,
+                        AddressHelper.privateKeyToBase58Address(senderPrivateKey)
+                )
+        );
+    }
 }

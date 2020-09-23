@@ -131,12 +131,27 @@ public class SdkTest {
      */
     @Test
     public void freezeBalanceTest() throws Exception {
-        String result = TrxHelper.freezeBalance(senderPrivateKey, BigDecimal.ONE,Common.ResourceCode.ENERGY);
+        String result = TrxHelper.freezeBalance(senderPrivateKey, BigDecimal.ONE, Common.ResourceCode.ENERGY);
         LOGGER.info(result);
 
         result = TrxHelper.freezeBalance(
-                senderPrivateKey, BigDecimal.ONE,"TT7bh9H6o8hVXXQ4L3q5Cp17LASmW9ud2y",
+                senderPrivateKey, BigDecimal.ONE, "TT7bh9H6o8hVXXQ4L3q5Cp17LASmW9ud2y",
                 Common.ResourceCode.ENERGY);
+        LOGGER.info(result);
+    }
+
+    /**
+     * 解冻TRX
+     *
+     * @throws Exception
+     */
+    @Test
+    public void unFreezeBalanceTest() throws Exception {
+        String result = TrxHelper.unFreezeBalance(senderPrivateKey, Common.ResourceCode.ENERGY);
+        LOGGER.info(result);
+
+        result = TrxHelper.unFreezeBalance(senderPrivateKey, Common.ResourceCode.ENERGY,
+                "TT7bh9H6o8hVXXQ4L3q5Cp17LASmW9ud2y");
         LOGGER.info(result);
     }
 
