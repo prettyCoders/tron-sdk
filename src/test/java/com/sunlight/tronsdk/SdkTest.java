@@ -2,7 +2,7 @@ package com.sunlight.tronsdk;
 
 import com.alibaba.fastjson.JSON;
 import com.sunlight.tronsdk.address.AccountResource;
-import com.sunlight.tronsdk.transaction.TransferResult;
+import com.sunlight.tronsdk.transaction.TransactionResult;
 import com.sunlight.tronsdk.trc10.Trc10Helper;
 import com.sunlight.tronsdk.trc20.Trc20Helper;
 import com.sunlight.tronsdk.trx.TrxHelper;
@@ -37,8 +37,8 @@ public class SdkTest {
      */
     @Test
     public void testSendTrxTransaction() throws Exception {
-        TransferResult resultBo = TrxHelper.transfer(senderPrivateKey, receiverAddress, BigDecimal.valueOf(1));
-        LOGGER.info("resultBo:" + JSON.toJSONString(resultBo));
+        TransactionResult transactionResult = TrxHelper.transfer(senderPrivateKey, receiverAddress, BigDecimal.valueOf(1));
+        LOGGER.info("transactionResult:" + JSON.toJSONString(transactionResult));
     }
 
     /**
@@ -51,8 +51,8 @@ public class SdkTest {
         //assetName 可以查TRC10转账记录获得,暂时不支持使用assetId
         String assetName = "31303032303030";
         Integer coinDecimal = 1000000;
-        TransferResult resultBo = Trc10Helper.transfer(senderPrivateKey, receiverAddress, BigDecimal.ONE, assetName, coinDecimal);
-        LOGGER.info("resultBo:" + JSON.toJSONString(resultBo));
+        TransactionResult transactionResult = Trc10Helper.transfer(senderPrivateKey, receiverAddress, BigDecimal.ONE, assetName, coinDecimal);
+        LOGGER.info("transactionResult:" + JSON.toJSONString(transactionResult));
     }
 
 
@@ -63,10 +63,10 @@ public class SdkTest {
      */
     @Test
     public void sendTrc20TransactionTest() throws Exception {
-        TransferResult resultBo = Trc20Helper.transfer(
+        TransactionResult transactionResult = Trc20Helper.transfer(
                 senderPrivateKey, receiverAddress, BigDecimal.ONE,
                 "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t", 10000000L);
-        LOGGER.info("resultBo:" + JSON.toJSONString(resultBo));
+        LOGGER.info("transactionResult:" + JSON.toJSONString(transactionResult));
 
     }
 
@@ -132,13 +132,19 @@ public class SdkTest {
      */
     @Test
     public void freezeBalanceTest() throws Exception {
-        String result = TrxHelper.freezeBalance(senderPrivateKey, BigDecimal.ONE, Common.ResourceCode.ENERGY);
-        LOGGER.info(result);
+        //能量
+        TransactionResult transactionResult = TrxHelper.freezeBalance(senderPrivateKey, BigDecimal.ONE, Common.ResourceCode.ENERGY);
+        LOGGER.info("transactionResult:" + JSON.toJSONString(transactionResult));
 
-        result = TrxHelper.freezeBalance(
+        transactionResult = TrxHelper.freezeBalance(
                 senderPrivateKey, BigDecimal.ONE, "TT7bh9H6o8hVXXQ4L3q5Cp17LASmW9ud2y",
                 Common.ResourceCode.ENERGY);
-        LOGGER.info(result);
+        LOGGER.info("transactionResult:" + JSON.toJSONString(transactionResult));
+
+        //带宽
+        transactionResult = TrxHelper.freezeBalance(
+                senderPrivateKey, BigDecimal.ONE, Common.ResourceCode.BANDWIDTH);
+        LOGGER.info("transactionResult:" + JSON.toJSONString(transactionResult));
     }
 
     /**
@@ -148,12 +154,12 @@ public class SdkTest {
      */
     @Test
     public void unFreezeBalanceTest() throws Exception {
-        String result = TrxHelper.unFreezeBalance(senderPrivateKey, Common.ResourceCode.ENERGY);
-        LOGGER.info(result);
+        TransactionResult transactionResult = TrxHelper.unFreezeBalance(senderPrivateKey, Common.ResourceCode.ENERGY);
+        LOGGER.info("transactionResult:" + JSON.toJSONString(transactionResult));
 
-        result = TrxHelper.unFreezeBalance(senderPrivateKey, Common.ResourceCode.ENERGY,
+        transactionResult = TrxHelper.unFreezeBalance(senderPrivateKey, Common.ResourceCode.ENERGY,
                 "TT7bh9H6o8hVXXQ4L3q5Cp17LASmW9ud2y");
-        LOGGER.info(result);
+        LOGGER.info("transactionResult:" + JSON.toJSONString(transactionResult));
     }
 
     /**
@@ -163,9 +169,15 @@ public class SdkTest {
      */
     @Test
     public void getAccountResourceTest() throws Exception {
-        AccountResource accountResource = TrxQuery.getAccountResource(
-                "TR3xXFAymy2pkwmU4JwRUeMrU7DMkHDQe3"
-        );
+        String address="TUaLK2ZX7LzYEgWYrEyXW15P9CBCXDtgaf";
+        //查询所有数据
+        AccountResource accountResource = TrxQuery.getAccountResource(address);
         LOGGER.info("accountResource:" + JSON.toJSONString(accountResource));
+
+        //查询单个数据
+        LOGGER.info("NetBalance:"+TrxQuery.getAddressNetBalance(address));
+        LOGGER.info("EnergyBalance:"+TrxQuery.getAddressEnergyBalance(address));
+        LOGGER.info("NetRate:"+TrxQuery.getNetRate(address));
+        LOGGER.info("EnergyRate:"+TrxQuery.getEnergyRate(address));
     }
 }

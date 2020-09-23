@@ -23,7 +23,7 @@ import java.util.Map;
  * @author: sunlight
  * @date: 2020/7/29 9:29
  */
-public class Transaction {
+public class TransactionSender {
 
     /**
      * 转账（支持TRX、TRC10、TRC20转账）

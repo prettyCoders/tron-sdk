@@ -1,6 +1,5 @@
 package com.sunlight.tronsdk;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sunlight.tronsdk.address.AccountResource;
 import com.sunlight.tronsdk.address.AddressHelper;
@@ -8,7 +7,6 @@ import com.sunlight.tronsdk.context.HttpContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.tron.protos.Protocol;
 
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -81,14 +79,68 @@ public class TrxQuery {
             Long freeNetLimit = result.getLong("freeNetLimit");
             Long energyUsed = result.getLong("EnergyUsed");
             Long energyLimit = result.getLong("EnergyLimit");
+            Long totalNetLimit = result.getLong("TotalNetLimit");
+            Long totalNetWeight = result.getLong("TotalNetWeight");
+            Long totalEnergyLimit = result.getLong("TotalEnergyLimit");
+            Long totalEnergyWeight = result.getLong("TotalEnergyWeight");
             return new AccountResource(
-                    freeNetUsed == null ? 0L : freeNetUsed
-                    , freeNetLimit == null ? 0L : freeNetLimit
-                    , energyUsed == null ? 0L : energyUsed
-                    , energyLimit == null ? 0L : energyLimit
+                    freeNetUsed == null ? 0L : freeNetUsed,
+                    freeNetLimit == null ? 0L : freeNetLimit,
+                    energyUsed == null ? 0L : energyUsed,
+                    energyLimit == null ? 0L : energyLimit,
+                    totalNetLimit == null ? 0L : totalNetLimit,
+                    totalNetWeight == null ? 0L : totalNetWeight,
+                    totalEnergyLimit == null ? 0L : totalEnergyLimit,
+                    totalEnergyWeight == null ? 0L : totalEnergyWeight
             );
         } catch (Exception e) {
             throw e;
         }
     }
+
+    /**
+     * 查询地址带宽余额
+     * @param address 地址（API设计成这样,莫法）
+     * @return
+     * @throws Exception
+     */
+    public static Long getAddressNetBalance(String address) throws Exception {
+        AccountResource accountResource=getAccountResource(address);
+        return accountResource.getFreeNetLimit()-accountResource.getFreeNetUsed();
+    }
+
+    /**
+     * 查询地址能量余额
+     * @param address 地址（API设计成这样,莫法）
+     * @return
+     * @throws Exception
+     */
+    public static Long getAddressEnergyBalance(String address) throws Exception {
+        AccountResource accountResource=getAccountResource(address);
+        return accountResource.getEnergyLimit()-accountResource.getEnergyUsed();
+    }
+
+    /**
+     * 查询带宽费率,也就是冻结1个TRX能换取多少资源
+     * @param address 地址（API设计成这样,莫法）
+     * @return
+     * @throws Exception
+     */
+    public static Long getNetRate(String address) throws Exception {
+        AccountResource accountResource=getAccountResource(address);
+        return accountResource.getTotalNetLimit()/accountResource.getTotalNetWeight();
+    }
+
+    /**
+     * 查询能量费率,也就是冻结1个TRX能换取多少资源
+     * @param address 地址（API设计成这样,莫法）
+     * @return
+     * @throws Exception
+     */
+    public static Long getEnergyRate(String address) throws Exception {
+        AccountResource accountResource=getAccountResource(address);
+        return accountResource.getTotalEnergyLimit()/accountResource.getTotalEnergyWeight();
+    }
+
+
 }

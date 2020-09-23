@@ -28,4 +28,20 @@ public class AccountResource {
      * 能量总量
      */
     private Long energyLimit;
+    /**
+     * 全网带宽总量
+     */
+    private Long totalNetLimit;
+    /**
+     * 全网带宽权重
+     */
+    private Long totalNetWeight;
+    /**
+     * 全网能量总量
+     */
+    private Long totalEnergyLimit;
+    /**
+     * 全网能量权重
+     */
+    private Long totalEnergyWeight;
 }

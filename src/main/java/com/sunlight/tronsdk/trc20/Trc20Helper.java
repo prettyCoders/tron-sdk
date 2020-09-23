@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.sunlight.tronsdk.SdkConfig;
 import com.sunlight.tronsdk.address.AddressHelper;
 import com.sunlight.tronsdk.context.HttpContext;
-import com.sunlight.tronsdk.transaction.Transaction;
-import com.sunlight.tronsdk.transaction.TransferResult;
+import com.sunlight.tronsdk.transaction.TransactionSender;
+import com.sunlight.tronsdk.transaction.TransactionResult;
 import com.sunlight.tronsdk.utils.TokenConverter;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -21,13 +21,13 @@ import java.util.Map;
  */
 public class Trc20Helper {
 
-    public static TransferResult transfer(
+    public static TransactionResult transfer(
             String senderPrivateKey,
             String receiverAddress,
             BigDecimal value,
             String contractAddress,
             Long feeLimit) throws Exception {
-        String result = Transaction.sendTransaction(
+        String result = TransactionSender.sendTransaction(
                 senderPrivateKey,
                 new Trc20TransferBuilder(
                         AddressHelper.privateKeyToBase58Address(senderPrivateKey),
@@ -37,7 +37,7 @@ public class Trc20Helper {
                         feeLimit
                 )
         );
-        return TransferResult.parse(result);
+        return TransactionResult.parse(result);
     }
 
     public static BigDecimal balanceOf(String ownerAddress,  String contractAddress) throws Exception {

@@ -1,8 +1,8 @@
 package com.sunlight.tronsdk.trx;
 
 import com.sunlight.tronsdk.address.AddressHelper;
-import com.sunlight.tronsdk.transaction.Transaction;
-import com.sunlight.tronsdk.transaction.TransferResult;
+import com.sunlight.tronsdk.transaction.TransactionSender;
+import com.sunlight.tronsdk.transaction.TransactionResult;
 import org.tron.protos.contract.Common;
 
 import java.math.BigDecimal;
@@ -13,19 +13,19 @@ import java.math.BigDecimal;
  */
 public class TrxHelper {
 
-    public static TransferResult transfer(String senderPrivateKey, String receiveAddress, BigDecimal value) throws Exception {
-        String result= Transaction.sendTransaction(
+    public static TransactionResult transfer(String senderPrivateKey, String receiveAddress, BigDecimal value) throws Exception {
+        String result= TransactionSender.sendTransaction(
                 senderPrivateKey,
                 new TrxTransferBuilder(
                         AddressHelper.privateKeyToBase58Address(senderPrivateKey),
                         receiveAddress,
                         value)
         );
-       return TransferResult.parse(result);
+       return TransactionResult.parse(result);
     }
 
-    public static String freezeBalance(String senderPrivateKey, BigDecimal frozenBalance, String receiverAddress,Common.ResourceCode resourceCode) throws Exception {
-        return Transaction.sendTransaction(
+    public static TransactionResult freezeBalance(String senderPrivateKey, BigDecimal frozenBalance, String receiverAddress,Common.ResourceCode resourceCode) throws Exception {
+        String result= TransactionSender.sendTransaction(
                 senderPrivateKey,
                 new TrxFreezeBalanceBuilder(
                         frozenBalance,
@@ -34,10 +34,11 @@ public class TrxHelper {
                         AddressHelper.privateKeyToBase58Address(senderPrivateKey)
                 )
         );
+        return TransactionResult.parse(result);
     }
 
-    public static String freezeBalance(String senderPrivateKey, BigDecimal frozenBalance,Common.ResourceCode resourceCode) throws Exception {
-        return Transaction.sendTransaction(
+    public static TransactionResult freezeBalance(String senderPrivateKey, BigDecimal frozenBalance,Common.ResourceCode resourceCode) throws Exception {
+        String result= TransactionSender.sendTransaction(
                 senderPrivateKey,
                 new TrxFreezeBalanceBuilder(
                         frozenBalance,
@@ -45,20 +46,22 @@ public class TrxHelper {
                         AddressHelper.privateKeyToBase58Address(senderPrivateKey)
                 )
         );
+        return TransactionResult.parse(result);
     }
 
-    public static String unFreezeBalance(String senderPrivateKey,Common.ResourceCode resourceCode) throws Exception {
-        return Transaction.sendTransaction(
+    public static TransactionResult unFreezeBalance(String senderPrivateKey,Common.ResourceCode resourceCode) throws Exception {
+        String result= TransactionSender.sendTransaction(
                 senderPrivateKey,
                 new TrxUnFreezeBalanceBuilder(
                         resourceCode,
                         AddressHelper.privateKeyToBase58Address(senderPrivateKey)
                 )
         );
+        return TransactionResult.parse(result);
     }
 
-    public static String unFreezeBalance(String senderPrivateKey,Common.ResourceCode resourceCode,String receiverAddress) throws Exception {
-        return Transaction.sendTransaction(
+    public static TransactionResult unFreezeBalance(String senderPrivateKey,Common.ResourceCode resourceCode,String receiverAddress) throws Exception {
+        String result= TransactionSender.sendTransaction(
                 senderPrivateKey,
                 new TrxUnFreezeBalanceBuilder(
                         receiverAddress,
@@ -66,5 +69,6 @@ public class TrxHelper {
                         AddressHelper.privateKeyToBase58Address(senderPrivateKey)
                 )
         );
+        return TransactionResult.parse(result);
     }
 }

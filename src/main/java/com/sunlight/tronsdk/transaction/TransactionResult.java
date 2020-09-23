@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransferResult {
+public class TransactionResult {
     /**
      * 交易Hash
      */
@@ -31,9 +31,9 @@ public class TransferResult {
      */
     private String message;
 
-    public static TransferResult parse(String result){
+    public static TransactionResult parse(String result){
         JSONObject jsonResult=JSONObject.parseObject(result);
-        return new TransferResult(
+        return new TransactionResult(
                 jsonResult.getString("txid"),
                 jsonResult.getBoolean("result"),
                 jsonResult.getString("code"),
