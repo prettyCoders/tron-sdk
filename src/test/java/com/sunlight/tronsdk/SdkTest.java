@@ -125,7 +125,7 @@ public class SdkTest {
     }
 
     /**
-     * 查询冻结TRX获取能量、带宽
+     * 冻结TRX获取能量、带宽
      *
      * @throws Exception
      */
