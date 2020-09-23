@@ -1,0 +1,43 @@
+apply plugin:'java'
+apply plugin:'application'
+jar{
+    manifestContentCharset 'utf-8'
+    metadataCharset 'utf-8'
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+
+}
+
+group 'com.sunlight'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    /**
+     * 先让gradle从本地仓库找,找不到再从下面的mavenCentral()中央仓库去找jar包
+     */
+    mavenLocal()
+    //mavenCentral()
+    //配置阿里云mavnen 库
+    maven{
+        url  "https://dl.bintray.com/ki5fpl/tronj"
+//        url 'http://maven.aliyun.com/nexus/content/groups/public/'
+    }
+    mavenCentral()
+}
+dependencies {
+    // 添加项目依赖，这里添加了selenium
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+    implementation 'com.github.ki5fpl.tronj:abi:0.4.0'
+    implementation 'com.github.ki5fpl.tronj:client:0.4.0'
+    implementation 'org.springframework.cloud:spring-cloud-consul-core:1.2.1.RELEASE'
+    implementation 'org.springframework.cloud:spring-cloud-commons:1.2.1.RELEASE'
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    compile fileTree(dir: 'src/main/libs', includes: ['*.jar'])
+}

@@ -1,0 +1,36 @@
+package tron.transaction.trc20;
+
+import org.tron.common.utils.ByteArray;
+import tron.address.AddressGenerator;
+
+import java.math.BigInteger;
+
+/**
+ * @author: sunlight
+ * @date: 2020/9/17 18:25
+ */
+public class Trc20TransferDecoder implements Trc20MessageDecoder{
+    private String data;
+
+    private Trc20TransferDecoder() {
+    }
+
+    public Trc20TransferDecoder(String data) {
+        this.data = data;
+    }
+
+    @Override
+    public TransferMessage decode() {
+        data=data.substring(32);
+        byte[] toBytes =ByteArray.fromHexString("41"+data.substring(0,40));
+        String toAddress= AddressGenerator.addressBytesEncode58Check(toBytes);
+        String hexValue=data.substring(52).replaceFirst("^0*", "");;
+        BigInteger value = new BigInteger(hexValue,16);
+        return new TransferMessage(toAddress,value);
+    }
+
+    public static void main(String[] args) {
+        byte[] toBytes =ByteArray.fromHexString("41e2fdc39e589b83eac4059c9289cd4e69a9296bd6");
+        System.out.println(AddressGenerator.addressBytesEncode58Check(toBytes));
+    }
+}
