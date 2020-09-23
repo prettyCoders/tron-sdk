@@ -1,6 +1,7 @@
 package com.sunlight.tronsdk;
 
 import com.alibaba.fastjson.JSON;
+import com.sunlight.tronsdk.address.AccountResource;
 import com.sunlight.tronsdk.transaction.TransferResult;
 import com.sunlight.tronsdk.trc10.Trc10Helper;
 import com.sunlight.tronsdk.trc20.Trc20Helper;
@@ -36,7 +37,7 @@ public class SdkTest {
      */
     @Test
     public void testSendTrxTransaction() throws Exception {
-        TransferResult resultBo = TrxHelper.transfer(senderPrivateKey, receiverAddress, BigDecimal.valueOf(0.1));
+        TransferResult resultBo = TrxHelper.transfer(senderPrivateKey, receiverAddress, BigDecimal.valueOf(1));
         LOGGER.info("resultBo:" + JSON.toJSONString(resultBo));
     }
 
@@ -155,4 +156,16 @@ public class SdkTest {
         LOGGER.info(result);
     }
 
+    /**
+     * 查询账户资源情况
+     *
+     * @throws Exception
+     */
+    @Test
+    public void getAccountResourceTest() throws Exception {
+        AccountResource accountResource = TrxQuery.getAccountResource(
+                "TR3xXFAymy2pkwmU4JwRUeMrU7DMkHDQe3"
+        );
+        LOGGER.info("accountResource:" + JSON.toJSONString(accountResource));
+    }
 }
