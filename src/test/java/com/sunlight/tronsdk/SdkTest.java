@@ -20,8 +20,8 @@ import java.math.BigInteger;
  */
 public class SdkTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SdkTest.class);
-    private String senderPrivateKey = "4c7a9d5dec98eff99cd6bc5dfe17068fff21f5dda04e1b46e420558aac484177";
-    private String receiverAddress = "TT7bh9H6o8hVXXQ4L3q5Cp17LASmW9ud2y";
+    private final String senderPrivateKey = "";
+    private final String receiverAddress = "";
 
     @Test
     @Before
