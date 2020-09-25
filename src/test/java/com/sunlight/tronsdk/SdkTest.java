@@ -1,6 +1,7 @@
 package com.sunlight.tronsdk;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.sunlight.tronsdk.address.AccountResource;
 import com.sunlight.tronsdk.transaction.TransactionResult;
 import com.sunlight.tronsdk.trc10.Trc10Helper;
@@ -37,7 +38,7 @@ public class SdkTest {
      */
     @Test
     public void testSendTrxTransaction() throws Exception {
-        TransactionResult transactionResult = TrxHelper.transfer(senderPrivateKey, receiverAddress, BigDecimal.valueOf(1));
+        TransactionResult transactionResult = TrxHelper.transfer(senderPrivateKey, receiverAddress, BigDecimal.valueOf(10));
         LOGGER.info("transactionResult:" + JSON.toJSONString(transactionResult));
     }
 
@@ -64,10 +65,21 @@ public class SdkTest {
     @Test
     public void sendTrc20TransactionTest() throws Exception {
         TransactionResult transactionResult = Trc20Helper.transfer(
-                senderPrivateKey, receiverAddress, BigDecimal.ONE,
-                "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t", 10000000L);
+                senderPrivateKey, receiverAddress, BigDecimal.valueOf(0.1),
+                "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t", null);
         LOGGER.info("transactionResult:" + JSON.toJSONString(transactionResult));
 
+    }
+
+    /**
+     * 查TRX余额
+     *
+     * @throws Exception
+     */
+    @Test
+    public void getTrxBalanceTest() throws Exception {
+        BigDecimal balance = TrxQuery.getTrxBalance("TT7bh9H6o8hVXXQ4L3q5Cp17LASmW9ud2y");
+        LOGGER.info("balance:" + balance);
     }
 
     /**
@@ -100,15 +112,13 @@ public class SdkTest {
     }
 
     /**
-     * 根据区块高度查区块数据
+     * 查询最新区块区块数据
      *
      * @throws Exception
      */
     @Test
-    public void getBlockByHeightTest() throws Exception {
-        String data = TrxQuery.getBlockByHeight(
-                BigInteger.valueOf(23495447)
-        );
+    public void getLatestBlockTest() throws Exception {
+        String data = TrxQuery.getLatestBlock();
         LOGGER.info("data:" + data);
     }
 
@@ -118,8 +128,34 @@ public class SdkTest {
      * @throws Exception
      */
     @Test
+    public void getBlockByHeightTest() throws Exception {
+        String data = TrxQuery.getBlockByHeight(
+                BigInteger.valueOf(23516058)
+        );
+        LOGGER.info("data:" + data);
+    }
+
+    /**
+     * 根据交易ID交易数据
+     *
+     * @throws Exception
+     */
+    @Test
     public void getTransactionByIdTest() throws Exception {
         String data = TrxQuery.getTransactionById(
+                "8ae0512630afe31226322d518e34a9eab2fe27ffa484dbf2c81cb484abc8f767"
+        );
+        LOGGER.info("data:" + data);
+    }
+
+    /**
+     * 根据交易ID交易信息（包含所在区块高度，可以用来计算确认数）
+     *
+     * @throws Exception
+     */
+    @Test
+    public void getTransactionInfoByIdTest() throws Exception {
+        String data = TrxQuery.getTransactionInfoById(
                 "8ae0512630afe31226322d518e34a9eab2fe27ffa484dbf2c81cb484abc8f767"
         );
         LOGGER.info("data:" + data);
