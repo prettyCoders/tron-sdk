@@ -3,14 +3,19 @@ package com.sunlight.tronsdk;
 import com.alibaba.fastjson.JSONObject;
 import com.sunlight.tronsdk.address.AccountResource;
 import com.sunlight.tronsdk.address.AddressHelper;
+import com.sunlight.tronsdk.constant.CoinConstant;
 import com.sunlight.tronsdk.context.HttpContext;
+import com.sunlight.tronsdk.utils.TokenConverter;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.sunlight.tronsdk.constant.CoinConstant.TRX_DECIMAL;
 
 /**
  * TRX查询工具类
@@ -66,6 +71,20 @@ public class TrxQuery {
         }
     }
 
+    public static String getTransactionInfoById(String transactionId) throws Exception {
+        Map<String, String> params = new HashMap<>();
+        params.put("value", transactionId);
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(params, HttpContext.standardHeaders);
+        String route = "/wallet/gettransactioninfobyid";
+        try {
+            ResponseEntity<String> responseEntity = HttpContext.restTemplate.exchange(
+                    SdkConfig.getInstance().getNodeServer() + route, HttpMethod.POST, httpEntity, String.class);
+            return responseEntity.getBody();
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     public static AccountResource getAccountResource(String address) throws Exception {
         Map<String, String> params = new HashMap<>();
         params.put("address", AddressHelper.toHexString(address));
@@ -100,46 +119,70 @@ public class TrxQuery {
 
     /**
      * 查询地址带宽余额
+     *
      * @param address 地址（API设计成这样,莫法）
      * @return
      * @throws Exception
      */
     public static Long getAddressNetBalance(String address) throws Exception {
-        AccountResource accountResource=getAccountResource(address);
-        return accountResource.getFreeNetLimit()-accountResource.getFreeNetUsed();
+        AccountResource accountResource = getAccountResource(address);
+        return accountResource.getFreeNetLimit() - accountResource.getFreeNetUsed();
     }
 
     /**
      * 查询地址能量余额
+     *
      * @param address 地址（API设计成这样,莫法）
      * @return
      * @throws Exception
      */
     public static Long getAddressEnergyBalance(String address) throws Exception {
-        AccountResource accountResource=getAccountResource(address);
-        return accountResource.getEnergyLimit()-accountResource.getEnergyUsed();
+        AccountResource accountResource = getAccountResource(address);
+        return accountResource.getEnergyLimit() - accountResource.getEnergyUsed();
     }
 
     /**
      * 查询带宽费率,也就是冻结1个TRX能换取多少资源
+     *
      * @param address 地址（API设计成这样,莫法）
      * @return
      * @throws Exception
      */
     public static Long getNetRate(String address) throws Exception {
-        AccountResource accountResource=getAccountResource(address);
-        return accountResource.getTotalNetLimit()/accountResource.getTotalNetWeight();
+        AccountResource accountResource = getAccountResource(address);
+        return accountResource.getTotalNetLimit() / accountResource.getTotalNetWeight();
     }
 
     /**
      * 查询能量费率,也就是冻结1个TRX能换取多少资源
+     *
      * @param address 地址（API设计成这样,莫法）
      * @return
      * @throws Exception
      */
     public static Long getEnergyRate(String address) throws Exception {
-        AccountResource accountResource=getAccountResource(address);
-        return accountResource.getTotalEnergyLimit()/accountResource.getTotalEnergyWeight();
+        AccountResource accountResource = getAccountResource(address);
+        return accountResource.getTotalEnergyLimit() / accountResource.getTotalEnergyWeight();
+    }
+
+    public static BigDecimal getTrxBalance(String address) throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        params.put("address", address);
+        params.put("visible", true);
+        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(params, HttpContext.standardHeaders);
+        String route = "/wallet/getaccount";
+        try {
+            ResponseEntity<String> responseEntity = HttpContext.restTemplate.exchange(
+                    SdkConfig.getInstance().getNodeServer() + route, HttpMethod.POST, httpEntity, String.class);
+            JSONObject body = JSONObject.parseObject(responseEntity.getBody());
+            if (body.isEmpty()) {
+                return BigDecimal.ZERO;
+            } else {
+                return TokenConverter.tokenBigIntegerToBigDecimal(body.getBigInteger("balance"), TRX_DECIMAL);
+            }
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
 

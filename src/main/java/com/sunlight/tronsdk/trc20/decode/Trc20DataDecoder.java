@@ -12,6 +12,7 @@ public class Trc20DataDecoder {
 
     public static TransferMessage decode(String data) throws Exception {
         Trc20MessageDecoder decoder= matchTrc20MessageDecoder(data);
+        if (decoder==null){return null;}
         return decoder.decode();
     }
 
@@ -22,7 +23,7 @@ public class Trc20DataDecoder {
         }else if(methodId.equals(encodeMethod(Trc20Method.TRANSFER_FROM))){
             return new Trc20TransferFromDecoder(data);
         }else {
-            throw new Exception("unknown trc20 method");
+            return null;
         }
     }
 

@@ -76,6 +76,11 @@ public class AddressHelper {
         }
     }
 
+    public static String addressHexToBase58(String addressHex){
+        byte[] toBytes =ByteArray.fromHexString(addressHex);
+        return addressBytesEncode58Check(toBytes);
+    }
+
     /**
      * Base58解码
      *

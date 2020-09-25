@@ -22,9 +22,7 @@ public class Trc20TransferDecoder implements Trc20MessageDecoder {
     @Override
     public TransferMessage decode() {
         data=data.substring(32);
-        byte[] toBytes =ByteArray.fromHexString("41"+data.substring(0,40));
-        String toAddress= AddressHelper.addressBytesEncode58Check(toBytes);
-        //.replaceFirst("^0*", "");;
+        String toAddress= AddressHelper.addressHexToBase58("41"+data.substring(0,40));
         String hexValue=data.substring(52);
         BigInteger value = new BigInteger(hexValue,16);
         return new TransferMessage(toAddress,value);
